@@ -1,9 +1,9 @@
-import {Bookmark} from './bookmark';
+import {Snippet} from './snippet';
 
-export interface RateBookmarkRequest {
+export interface RateSnippetRequest {
   ratingUserId: string;
   action: RatingActionType;
-  bookmark: Bookmark
+  snippet: Snippet
 }
 
 export enum RatingActionType {

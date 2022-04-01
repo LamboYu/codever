@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Bookmark } from './model/bookmark';
-
 import { shareReplay } from 'rxjs/operators';
 
 import { Observable } from 'rxjs';
@@ -25,6 +23,13 @@ export class PersonalSnippetsService {
 
   getPersonalSnippetById(userId: string, codeletId: string): Observable<Snippet> {
     return this.httpClient.get<Snippet>(`${this.personalSnippetsApiBaseUrl}/${userId}/snippets/${codeletId}`).pipe(shareReplay(1));
+  }
+
+  getPersonalSnippetOrderedBy(userId: string, orderBy: string): Observable<Snippet[]> {
+    let params = new HttpParams();
+    params = params.append('orderBy', orderBy);
+
+    return this.httpClient.get<Snippet[]>(`${this.personalSnippetsApiBaseUrl}/${userId}/snippets`, {params: params});
   }
 
   getUserTagsForSnippets(userId: String): Observable<UsedTag[]> {
@@ -62,9 +67,9 @@ export class PersonalSnippetsService {
       .pipe(shareReplay(1));
   }
 
-  increaseOwnerVisitCount(bookmark: Bookmark) {
+  increaseOwnerVisitCount(snippet: Snippet) {
     return this.httpClient
-      .post(`${this.personalSnippetsApiBaseUrl}/${bookmark.userId}/bookmarks/${bookmark._id}/owner-visits/inc`, {},
+      .post(`${this.personalSnippetsApiBaseUrl}/${snippet.userId}/snippets/${snippet._id}/owner-visits/inc`, {},
         {headers: this.headers})
       .pipe(shareReplay(1));
   }

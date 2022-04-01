@@ -2,7 +2,6 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { Snippet } from '../../core/model/snippet';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { Bookmark } from '../../core/model/bookmark';
 
 @Component({
   selector: 'app-async-snippet-list',
@@ -32,7 +31,7 @@ export class AsyncSnippetListComponent implements OnInit {
 
   }
 
-  of(searchResult: Snippet | Bookmark) {
+  of(searchResult: Snippet) {
     return of(searchResult);
   }
 

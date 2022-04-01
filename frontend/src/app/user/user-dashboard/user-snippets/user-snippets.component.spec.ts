@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BookmarksTaggedComponent } from './bookmarks-tagged.component';
+import { UserBookmarksComponent } from './user-snippets.component';
 
-xdescribe('TagComponent', () => {
-  let component: BookmarksTaggedComponent;
-  let fixture: ComponentFixture<BookmarksTaggedComponent>;
+describe('UserBookmarksComponent', () => {
+  let component: UserBookmarksComponent;
+  let fixture: ComponentFixture<UserBookmarksComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BookmarksTaggedComponent ]
+      declarations: [ UserBookmarksComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BookmarksTaggedComponent);
+    fixture = TestBed.createComponent(UserBookmarksComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

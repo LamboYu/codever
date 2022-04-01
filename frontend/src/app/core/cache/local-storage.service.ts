@@ -49,9 +49,7 @@ export class LocalStorageService {
     this.cleanCachedKeys([
       localStorageKeys.userLocalStorageConsent,
       localStorageKeys.userInfoOidc,
-      localStorageKeys.personalTagsBookmarks,
       localStorageKeys.personalTagsSnippets,
-      localStorageKeys.userHistoryBookmarks
     ]);
   }
 

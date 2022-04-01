@@ -6,7 +6,6 @@ import { FormControl } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DeleteBookmarksByTagDialogComponent } from './delete-bookmarks-by-tag-dialog/delete-bookmarks-by-tag-dialog.component';
-import { PersonalBookmarksService } from '../../../core/personal-bookmarks.service';
 import { UserData } from '../../../core/model/user-data';
 import { UserDataWatchedTagsStore } from '../../../core/user/userdata.watched-tags.store';
 import { TagFollowingBaseComponent } from '../../../shared/tag-following-base-component/tag-following-base.component';
@@ -41,7 +40,6 @@ export class UserTagsComponent extends TagFollowingBaseComponent implements OnIn
     private userDataService: UserDataService,
     public userDataWatchedTagsStore: UserDataWatchedTagsStore,
     public loginDialog: MatDialog,
-    private personaBookmarksService: PersonalBookmarksService,
     private localStorageService: LocalStorageService,
   ) {
     super(loginDialog, userDataWatchedTagsStore);
@@ -75,46 +73,6 @@ export class UserTagsComponent extends TagFollowingBaseComponent implements OnIn
     const filterValue = name.toLowerCase();
 
     return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) >= 0);
-  }
-
-  deletePrivateBookmarksByTag(value: string) {
-    console.log('DELETED all private tags for value ', value)
-  }
-
-  openDeleteDialog(tag: string) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      tag: tag
-    };
-
-    console.log(dialogConfig.data);
-
-    const dialogRef = this.deleteDialog.open(DeleteBookmarksByTagDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      data => {
-        if (data === 'DELETE_CONFIRMED') {
-          this.deletePrivateBookmarksForTag(tag);
-        }
-      }
-    );
-  }
-
-  deletePrivateBookmarksForTag(tag: string): void {
-    this.personaBookmarksService.deletePrivateBookmarksForTag(this.userId, tag).subscribe((response) => {
-      console.log('Private bookmarks deleted for tag - ', tag);
-      this.localStorageService.cleanCachedKey(localStorageKeys.userHistoryBookmarks);
-      const iziToastSettings: IziToastSettings = {
-        title: `${response.deletedCount} bookmarks successfully deleted`,
-        timeout: 3000,
-        message: 'Page will reload shortly'
-      }
-      iziToast.success(iziToastSettings);
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000)
-    });
   }
 
 }

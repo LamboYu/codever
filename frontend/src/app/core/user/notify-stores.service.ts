@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Bookmark } from '../model/bookmark';
+import { Snippet } from '../model/snippet';
 
 @Injectable()
 export class NotifyStoresService {
 
   // Observable string sources
-  private bookmarkDeleteSource = new Subject<Bookmark>();
+  private snippetDeleteSource = new Subject<Snippet>();
 
   // Observable string streams
-  bookmarkDeleted$ = this.bookmarkDeleteSource.asObservable();
+  snippetDeleted$ = this.snippetDeleteSource.asObservable();
 
-  deleteBookmark(bookmark: Bookmark) {
-    this.bookmarkDeleteSource.next(bookmark);
+  deleteSnippet(snippet: Snippet) {
+    this.snippetDeleteSource.next(snippet);
   }
 
 }

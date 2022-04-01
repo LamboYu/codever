@@ -5,7 +5,6 @@ import { UserDataStore } from '../../../core/user/userdata.store';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserDataService } from '../../../core/user-data.service';
-import { PersonalBookmarksService } from '../../../core/personal-bookmarks.service';
 
 
 @Component({
@@ -31,7 +30,6 @@ export class UserProfileComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private userDataStore: UserDataStore,
               private userDataService: UserDataService,
-              private personalBookmarksService: PersonalBookmarksService,
               private router: Router
   ) {
   }
@@ -66,7 +64,7 @@ export class UserProfileComponent implements OnInit {
     this.userDataStore.updateUserData$(this.userData).subscribe(() => {
       const displayName = this.userProfileForm.get('displayName').value;
       if (this.userProfileForm.get('displayName').dirty) {
-        this.personalBookmarksService.updateDisplayNameInBookmarks(this.userData.userId, displayName).subscribe();
+        //this.personalBookmarksService.updateDisplayNameInBookmarks(this.userData.userId, displayName).subscribe();
       }
 
       this.navigateToUserProfile(displayName);

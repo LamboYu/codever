@@ -16,7 +16,7 @@ import { UserDataStore } from './core/user/userdata.store';
 import { Search, UserData } from './core/model/user-data';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Bookmark } from './core/model/bookmark';
+import { Snippet } from './core/model/snippet';
 import { Router } from '@angular/router';
 import { AddToHistoryService } from './core/user/add-to-history.service';
 
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
   userData$: Observable<UserData>;
   showAcknowledgeMigrationHeader = false;
   latestSearches$: Observable<Search[]>;
-  latestVisitedBookmarks$: Observable<Bookmark[]>;
+  latestVisitedSnippets$: Observable<Snippet[]>;
 
   private hoveringLastSearches: boolean[] = [];
   private hoveringLastVisited: boolean[] = [false, false, false, false, false, false, false, false, false, false];
@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
         this.userIsLoggedIn = true;
         this.userInfoStore.getUserInfo$().subscribe(userInfo => {
           this.userId = userInfo.sub;
-          this.latestVisitedBookmarks$ = this.userDataHistoryStore.getHistory$(this.userId, 1);
+          this.latestVisitedSnippets$ = this.userDataHistoryStore.getHistory$(this.userId, 1);
         });
         this.userData$ = this.userDataStore.getUserData$();
         this.latestSearches$ = this.userData$.pipe(
@@ -89,7 +89,7 @@ export class AppComponent implements OnInit {
       dialogConfig.disableClose = true;
       dialogConfig.autoFocus = true;
       dialogConfig.data = {
-        message: 'You need to be logged in to see the Pinned Bookmarks popup'
+        message: 'You need to be logged in to see the Pinned Snippets popup'
       };
 
       this.loginDialog.open(LoginRequiredDialogComponent, dialogConfig);
@@ -102,7 +102,7 @@ export class AppComponent implements OnInit {
       dialogConfig.width = this.getRelativeWidth();
       dialogConfig.height = this.getRelativeHeight();
       dialogConfig.data = {
-        bookmarks$: this.userDataPinnedStore.getPinnedBookmarks$(this.userId, 1),
+        snippets$: this.userDataPinnedStore.getPinnedSnippets$(this.userId, 1),
         title: '<i class="fas fa-thumbtack"></i> Pinned'
       };
 
@@ -141,7 +141,7 @@ export class AppComponent implements OnInit {
       dialogConfig.disableClose = true;
       dialogConfig.autoFocus = true;
       dialogConfig.data = {
-        message: 'You need to be logged in to see the History Bookmarks popup'
+        message: 'You need to be logged in to see the History Snippets popup'
       };
 
       this.loginDialog.open(LoginRequiredDialogComponent, dialogConfig);
@@ -154,7 +154,7 @@ export class AppComponent implements OnInit {
       dialogConfig.width = this.getRelativeWidth();
       dialogConfig.height = this.getRelativeHeight();
       dialogConfig.data = {
-        bookmarks$: this.userDataHistoryStore.getAllHistory$(this.userId),
+        snippets$: this.userDataHistoryStore.getAllHistory$(this.userId),
         title: '<i class="fas fa-history"></i> History'
       };
 
@@ -179,7 +179,7 @@ export class AppComponent implements OnInit {
     iziToast.success(iziToastSettings);
 
     const feedback: Feedback = {
-      question: 'Bookmarks.dev rebranding to Codever',
+      question: 'Snippets.dev rebranding to Codever',
       userResponse: response,
       userId: this.userId ? this.userId : null,
       userAgent: navigator.userAgent
@@ -200,18 +200,14 @@ export class AppComponent implements OnInit {
     this.hoveringLastVisited.forEach(item => item = false);
   }
 
-  navigateToBookmarkDetails(bookmark: Bookmark): void {
-    let link = [`./my-bookmarks/${bookmark._id}/details`];
-    if (bookmark.public) {
-      link = [`./bookmarks/${bookmark._id}/details`];
+  navigateToSnippetDetails(snippet: Snippet): void {
+    let link = [`./my-snippets/${snippet._id}/details`];
+    if (snippet.public) {
+      link = [`./snippets/${snippet._id}/details`];
     }
     this.router.navigate(link, {
-      state: {bookmark: bookmark}
+      state: {snippet: snippet}
     });
-    this.addToHistoryService.promoteInHistoryIfLoggedIn(this.userIsLoggedIn, bookmark);
-  }
-
-  goToMainLink(bookmark: Bookmark) {
-    window.open(bookmark.location, '_blank');
+    this.addToHistoryService.promoteInHistoryIfLoggedIn(this.userIsLoggedIn, snippet);
   }
 }

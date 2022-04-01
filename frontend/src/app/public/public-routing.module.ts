@@ -1,7 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { BookmarksTaggedComponent } from './tag/bookmarks-tagged.component';
-import { HomepageComponent } from './bookmarks/homepage.component';
+import { HomepageComponent } from './snippets/homepage.component';
 import { PrivacyPolicyComponent } from './privacy/privacy-policy.component';
 import { TermsOfServiceComponent } from './terms/terms-of-service.component';
 import { UserPublicProfileComponent } from './user-public-profile/user-public-profile.component';
@@ -12,7 +11,6 @@ import { SnippetTaggedComponent } from './snippets/tag/snippet-tagged.component'
 import { ExtensionsPageComponent } from './extensions/extensions-page.component';
 import { AboutComponent } from './about/about.component';
 import { RegisterComponent } from './register/register.component';
-import { PublicBookmarkDetailsComponent } from './bookmarks/public-bookmark-details.component';
 
 const publicRoutes: Routes = [
   {
@@ -41,30 +39,6 @@ const publicRoutes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'tagged/:tag',
-    redirectTo: 'bookmarks/t/:tag'
-  },
-  {
-    path: 'tags/:tag',
-    redirectTo: 'bookmarks/t/:tag'
-  },
-  {
-    path: 't/:tag',
-    redirectTo: 'bookmarks/t/:tag'
-  },
-  {
-    path: 'bookmarks/tagged/:tag',
-    redirectTo: 'bookmarks/t/:tag'
-  },
-  {
-    path: 'bookmarks/tags/:tag',
-    redirectTo: 'bookmarks/t/:tag'
-  },
-  {
-    path: 'bookmarks/t/:tag',
-    component: BookmarksTaggedComponent
-  },
-  {
     path: 'about',
     component: AboutComponent
   },
@@ -79,10 +53,6 @@ const publicRoutes: Routes = [
   {
     path: 'howto',
     loadChildren: () => import('app/public/howto/howto.module').then(m => m.HowtoModule)
-  },
-  {
-    path: 'bookmarklets',
-    redirectTo: 'howto/bookmarklets'
   },
   {
     path: 'privacy-policy',
@@ -122,19 +92,6 @@ const publicRoutes: Routes = [
       {
         path: '**',
         component: PublicSnippetDetailsComponent
-      }
-    ]
-  },
-  {
-    path: 'bookmarks/:id',
-    component: PublicBookmarkDetailsComponent,
-    children: [
-      // This is a WILDCARD CATCH-ALL route that is scoped to the "/snippets/:snippetid"
-      // route prefix. It will only catch non-matching routes that live
-      // within this portion of the router tree.
-      {
-        path: '**',
-        component: PublicBookmarkDetailsComponent
       }
     ]
   },

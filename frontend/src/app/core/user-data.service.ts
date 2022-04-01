@@ -5,9 +5,9 @@ import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { UserData } from './model/user-data';
-import { Bookmark } from './model/bookmark';
+import { Snippet } from './model/snippet';
 import { shareReplay } from 'rxjs/operators';
-import { RateBookmarkRequest } from './model/rate-bookmark.request';
+import { RateSnippetRequest } from './model/rate-snippet.request';
 import { UsedTags } from './model/used-tag';
 import { UserDataProfile } from './model/user-data-profile';
 import { HttpClientLocalStorageService, HttpOptions } from './cache/http-client-local-storage.service';
@@ -44,13 +44,13 @@ export class UserDataService {
 
   updateUserDataPinned(userId: string, pinned: string[]): Observable<UserData> {
     return this.httpClient
-      .patch(`${this.usersApiBaseUrl}/${userId}/pinned`, {pinnedBookmarkIds: pinned}, {headers: this.headers})
+      .patch(`${this.usersApiBaseUrl}/${userId}/pinned`, {pinnedSnippetIds: pinned}, {headers: this.headers})
       .pipe(shareReplay(1));
   }
 
   updateUserDataReadLater(userId: string, readLater: string[]): Observable<UserData> {
     return this.httpClient
-      .patch(`${this.usersApiBaseUrl}/${userId}/read-later`, {readLaterBookmarkIds: readLater}, {headers: this.headers})
+      .patch(`${this.usersApiBaseUrl}/${userId}/read-later`, {readLaterSnippetIds: readLater}, {headers: this.headers})
       .pipe(shareReplay(1));
   }
 
@@ -90,78 +90,78 @@ export class UserDataService {
     return this.httpClient.post(`${this.usersApiBaseUrl}/${userId}/profile-picture`, formData);
   }
 
-  uploadBookmarks(userId: String, bookmarks: File, userDisplayName: string): Observable<any> {
+  uploadSnippets(userId: String, snippets: File, userDisplayName: string): Observable<any> {
     const formData = new FormData();
-    formData.append('bookmarks', bookmarks);
+    formData.append('snippets', snippets);
     formData.append('userDisplayName', userDisplayName);
 
-    return this.httpClient.post(`${this.usersApiBaseUrl}/${userId}/bookmarks/upload`, formData);
+    return this.httpClient.post(`${this.usersApiBaseUrl}/${userId}/snippets/upload`, formData);
   }
 
-  getReadLater(userId: string, page: number, limit: number): Observable<Bookmark[]> {
+  getReadLater(userId: string, page: number, limit: number): Observable<Snippet[]> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
     return this.httpClient
-      .get<Bookmark[]>(`${this.usersApiBaseUrl}/${userId}/read-later`, {params: params})
+      .get<Snippet[]>(`${this.usersApiBaseUrl}/${userId}/read-later`, {params: params})
       .pipe(shareReplay(1));
   }
 
-  getLikedBookmarks(userId: string): Observable<Bookmark[]> {
+  getLikedSnippets(userId: string): Observable<Snippet[]> {
     return this.httpClient
-      .get<Bookmark[]>(`${this.usersApiBaseUrl}/${userId}/likes`)
+      .get<Snippet[]>(`${this.usersApiBaseUrl}/${userId}/likes`)
       .pipe(shareReplay(1));
   }
 
-  getPinnedBookmarks(userId: string, page: number, limit: number): Observable<Bookmark[]> {
+  getPinnedSnippets(userId: string, page: number, limit: number): Observable<Snippet[]> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
     return this.httpClient
-      .get<Bookmark[]>(`${this.usersApiBaseUrl}/${userId}/pinned`, {params: params})
+      .get<Snippet[]>(`${this.usersApiBaseUrl}/${userId}/pinned`, {params: params})
       .pipe(shareReplay(1));
   }
 
   /**
    * Deprecated - "favorites" has been temporarily deactivated till complete removal or reactivation
    */
-  getFavoriteBookmarks(userId: string, page: number, limit: number): Observable<Bookmark[]> {
+  getFavoriteSnippets(userId: string, page: number, limit: number): Observable<Snippet[]> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
     return this.httpClient
-      .get<Bookmark[]>(`${this.usersApiBaseUrl}/${userId}/favorites`, {params: params})
+      .get<Snippet[]>(`${this.usersApiBaseUrl}/${userId}/favorites`, {params: params})
       .pipe(shareReplay(1));
   }
 
-  getFeedBookmarks(userId: string, page: number, limit: number): Observable<Bookmark[]> {
+  getFeedSnippets(userId: string, page: number, limit: number): Observable<Snippet[]> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
     return this.httpClient
-      .get<Bookmark[]>(`${this.usersApiBaseUrl}/${userId}/feed`, {params: params})
+      .get<Snippet[]>(`${this.usersApiBaseUrl}/${userId}/feed`, {params: params})
       .pipe(shareReplay(1));
   }
 
-  getHistory$(userId: string, page: number, limit: number): Observable<Bookmark[]> {
+  getHistory$(userId: string, page: number, limit: number): Observable<Snippet[]> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
     return this.httpClient
-      .get<Bookmark[]>(`${this.usersApiBaseUrl}/${userId}/history`, {params: params})
+      .get<Snippet[]>(`${this.usersApiBaseUrl}/${userId}/history`, {params: params})
       .pipe(shareReplay(1));
   }
 
-  getAllHistory$(userId: string): Observable<Bookmark[]> {
+  getAllHistory$(userId: string): Observable<Snippet[]> {
     const options: HttpOptions = {
       url: `${this.usersApiBaseUrl}/${userId}/history`,
-      key: localStorageKeys.userHistoryBookmarks,
+      key: localStorageKeys.userHistorySnippets,
       cacheHours: 24,
       isSensitive: true
     }; // cache it for a day
 
     return this.httpClientLocalStorageService
-      .get<Bookmark[]>(options)
+      .get<Snippet[]>(options)
       .pipe(shareReplay(1));
   }
 
@@ -173,10 +173,10 @@ export class UserDataService {
   }
 
 
-  rateBookmark(rateBookmarkRequest: RateBookmarkRequest): Observable<any> {
+  rateSnippet(rateSnippetRequest: RateSnippetRequest): Observable<any> {
     return this.httpClient
-      .patch(`${this.usersApiBaseUrl}/${rateBookmarkRequest.ratingUserId}/bookmarks/likes/${rateBookmarkRequest.bookmark._id}`,
-        JSON.stringify(rateBookmarkRequest),
+      .patch(`${this.usersApiBaseUrl}/${rateSnippetRequest.ratingUserId}/snippets/likes/${rateSnippetRequest.snippet._id}`,
+        JSON.stringify(rateSnippetRequest),
         {headers: this.headers})
       .pipe(shareReplay(1));
   }

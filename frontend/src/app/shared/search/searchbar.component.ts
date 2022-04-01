@@ -14,12 +14,10 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PublicBookmarksStore } from '../../public/bookmarks/store/public-bookmarks-store.service';
 import { KeycloakService } from 'keycloak-angular';
 import { Search, UserData } from '../../core/model/user-data';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserDataStore } from '../../core/user/userdata.store';
-import { PublicBookmarksService } from '../../public/bookmarks/public-bookmarks.service';
 import { KeycloakServiceWrapper } from '../../core/keycloak-service-wrapper.service';
 import { UserInfoStore } from '../../core/user/user-info.store';
 import { PaginationNotificationService } from '../../core/pagination-notification.service';
@@ -75,7 +73,7 @@ export class SearchbarComponent implements OnInit, AfterViewInit {
 
   public innerWidth: any;
 
-  searchDomain = SearchDomain.PUBLIC_BOOKMARKS.valueOf();
+  searchDomain = SearchDomain.PUBLIC_SNIPPETS.valueOf();
   searchDomains = searchDomains;
 
   currentPage: number;
@@ -84,8 +82,6 @@ export class SearchbarComponent implements OnInit, AfterViewInit {
   constructor(private router: Router,
               private route: ActivatedRoute,
               private searchNotificationService: SearchNotificationService,
-              private bookmarkStore: PublicBookmarksStore,
-              private publicBookmarksService: PublicBookmarksService,
               private paginationNotificationService: PaginationNotificationService,
               private keycloakService: KeycloakService,
               private keycloakServiceWrapper: KeycloakServiceWrapper,
@@ -143,7 +139,7 @@ export class SearchbarComponent implements OnInit, AfterViewInit {
     this.keycloakService.isLoggedIn().then(isLoggedIn => {
       if (isLoggedIn) {
         this.userIsLoggedIn = true;
-        this.searchDomain = SearchDomain.MY_BOOKMARKS;
+        this.searchDomain = SearchDomain.MY_SNIPPETS;
       }
     });
 
@@ -171,10 +167,8 @@ export class SearchbarComponent implements OnInit, AfterViewInit {
     this.searchDomain = selectedSearchDomain;
     this.watchSearchBoxValueChanges();
     this.setFilteredSearches$(selectedSearchDomain);
-    if ((selectedSearchDomain === SearchDomain.MY_BOOKMARKS
-      || selectedSearchDomain === SearchDomain.ALL_MINE
-      || selectedSearchDomain === SearchDomain.MY_SNIPPETS) && !this.userIsLoggedIn) {
-      this.searchDomain = SearchDomain.PUBLIC_BOOKMARKS;
+    if ((selectedSearchDomain === SearchDomain.MY_SNIPPETS) && !this.userIsLoggedIn) {
+      this.searchDomain = SearchDomain.PUBLIC_SNIPPETS;
       this.showLoginRequiredDialog('You need to be logged in to search in your personal assets');
     } else {
       this.searchDomain = selectedSearchDomain;

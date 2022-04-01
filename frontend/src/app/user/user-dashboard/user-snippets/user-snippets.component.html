@@ -1,0 +1,39 @@
+<div class="mt-3 sorting-import-buttons">
+  <div class="btn-group" role="group">
+    <button type="button" class="btn" title="Snippets you've created recently"
+            [ngClass]="{'btn-secondary': orderBy === 'LAST_CREATED', 'btn-outline-secondary': orderBy !== 'LAST_CREATED'}"
+            [disabled]="orderBy === 'LAST_CREATED'"
+            (click)="getLastCreatedSnippets()">
+
+      Latest <i class="fas fa-long-arrow-alt-down"></i>
+    </button>
+    <button type="button" class="btn" title="Your Snippets you've viewed the most"
+            [ngClass]="{'btn-secondary': orderBy === 'MOST_USED', 'btn-outline-secondary': orderBy !== 'MOST_USED'}"
+            [disabled]="orderBy === 'MOST_USED'"
+            (click)="getMostUsedSnippets()">
+      Visited <i class="fas fa-long-arrow-alt-down"></i>
+    </button>
+    <!-- TODO remove when all private modus is implemented -->
+    <button type="button" class="btn" title="Your most liked public Snippets"
+            [ngClass]="{'btn-secondary': orderBy === 'MOST_LIKES', 'btn-outline-secondary': orderBy !== 'MOST_LIKES'}"
+            [disabled]="orderBy === 'MOST_LIKES'"
+            (click)="getMostLikedSnippets()">
+      Likes <i class="fas fa-long-arrow-alt-down"></i>
+    </button>
+  </div>
+</div>
+
+<app-async-Snippet-list
+  *ngIf="(userSnippets$ | async) && (userSnippets$ | async).length > 0; else showSnippetsMessage"
+  [Snippets$]="userSnippets$"
+  [userData$]="userData$"
+  [showPagination]="false">
+</app-async-Snippet-list>
+
+<ng-template #showSnippetsMessage>
+  <div class="alert alert-info mt-4">
+    👉 &nbsp;See our <strong>Snippets </strong> <a [routerLink]="['/howto/Snippets']"> <i
+    class="fas fa-info-circle"></i> HowTo guide</a>
+    to find out how you can easily save your <strong>first Snippet</strong>.
+  </div>
+</ng-template>

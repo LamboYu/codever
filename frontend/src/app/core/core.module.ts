@@ -4,7 +4,6 @@ import {Logger} from './logger.service';
 import {ErrorService} from './error/error.service';
 import {ErrorComponent} from './error/error.component';
 import {RouterModule} from '@angular/router';
-import {PersonalBookmarksService} from './personal-bookmarks.service';
 import {UserDataService} from './user-data.service';
 import {UserDataStore} from './user/userdata.store';
 import {LoaderService} from './loader/loader.service';
@@ -12,7 +11,6 @@ import {KeycloakServiceWrapper} from './keycloak-service-wrapper.service';
 import {UserInfoService} from './user/user-info.service';
 import {UserInfoStore} from './user/user-info.store';
 import {SuggestedTagsStore} from './user/suggested-tags.store';
-import {MyBookmarksStore} from './user/my-bookmarks.store';
 import {AdminService} from './admin/admin.service';
 import {WebpageInfoService} from './webpage-info/webpage-info.service';
 import { PaginationNotificationService } from './pagination-notification.service';
@@ -34,7 +32,6 @@ import { LocalStorageService } from './cache/local-storage.service';
 import { HttpClientLocalStorageService } from './cache/http-client-local-storage.service';
 import { SystemService } from './cache/system.service';
 import { CookieService } from './cookies/cookie.service';
-import { PersonalSearchService } from './personal-search.service';
 
 
 /**
@@ -58,9 +55,7 @@ import { PersonalSearchService } from './personal-search.service';
     Logger,
     ErrorService,
     AuthGuard,
-    PersonalBookmarksService,
     PersonalSnippetsService,
-    PersonalSearchService,
     AdminService,
     UserDataService,
     UserDataStore,
@@ -69,7 +64,6 @@ import { PersonalSearchService } from './personal-search.service';
     UserDataReadLaterStore,
     UserDataFavoritesStore,
     NotifyStoresService,
-    MyBookmarksStore,
     UserInfoService,
     UserInfoStore,
     FeedStore,

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { Observable, throwError } from 'rxjs';
-import { Bookmark } from '../../core/model/bookmark';
 
 import { environment } from 'environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -30,14 +29,14 @@ export class PublicSnippetsService {
     return this.httpClient.get<Snippet[]>(this.publicSnippetsApiBaseUrl, {params: params});
   }
 
-  searchPublicSnippets(searchText: string, limit: number, page: number, sort: string, include: string): Observable<Bookmark[]> {
+  searchPublicSnippets(searchText: string, limit: number, page: number, sort: string, include: string): Observable<Snippet[]> {
     const params = new HttpParams()
       .set('q', searchText)
       .set('page', page.toString())
       .set('sort', sort)
       .set('limit', limit.toString())
       .set('include', include);
-    return this.httpClient.get<Bookmark[]>(this.publicSnippetsApiBaseUrl, {params: params})
+    return this.httpClient.get<Snippet[]>(this.publicSnippetsApiBaseUrl, {params: params})
       .pipe(shareReplay(1));
   }
 

@@ -6,14 +6,14 @@ import { ErrorService } from '../error/error.service';
 import { Following, Profile, Search, UserData } from '../model/user-data';
 import { UserDataService } from '../user-data.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Bookmark } from '../model/bookmark';
+import { Snippet } from '../model/snippet';
 import { UserInfoService } from './user-info.service';
 import { UserInfoStore } from './user-info.store';
-import { RateBookmarkRequest, RatingActionType } from '../model/rate-bookmark.request';
+import { RateSnippetRequest, RatingActionType } from '../model/rate-snippet.request';
 import { NotifyStoresService } from './notify-stores.service';
 import { Md5 } from 'ts-md5/dist/md5';
 import { UserDataHistoryStore } from './userdata.history.store';
-import { PersonalBookmarksService } from '../personal-bookmarks.service';
+import { PersonalSnippetsService } from '../personal-snippets.service';
 import { environment } from '../../../environments/environment';
 import { LocalStorageService } from '../cache/local-storage.service';
 import { localStorageKeys } from '../model/localstorage.cache-keys';
@@ -25,8 +25,8 @@ export class UserDataStore {
 
   private _userData: ReplaySubject<UserData> = new ReplaySubject(1);
 
-  private _stars: BehaviorSubject<Bookmark[]> = new BehaviorSubject(null);
-  private starredBookmarksHaveBeenLoaded = false;
+  private _stars: BehaviorSubject<Snippet[]> = new BehaviorSubject(null);
+  private starredSnippetsHaveBeenLoaded = false;
 
   private userId: string;
   private userFirstName: string;
@@ -41,7 +41,7 @@ export class UserDataStore {
               private userInfoStore: UserInfoStore,
               private notifyStoresService: NotifyStoresService,
               private userDataHistoryStore: UserDataHistoryStore,
-              private personalBookmarksService: PersonalBookmarksService,
+              private personalSnippetsService: PersonalSnippetsService,
               private localStorageService: LocalStorageService
   ) {
   }
@@ -127,19 +127,19 @@ export class UserDataStore {
     return obs;
   }
 
-  updateHistoryReadLaterAndPinned$(bookmark: Bookmark, readLater: boolean, pinned: boolean): Observable<UserData> {
+  updateHistoryReadLaterAndPinned$(snippet: Snippet, readLater: boolean, pinned: boolean): Observable<UserData> {
     // history
-    this.placeOnTopOfUserHistoryIds(bookmark._id);
+    this.placeOnTopOfUserHistoryIds(snippet._id);
 
     let readLaterList = [];
     if (readLater) {
-      this.userData.readLater.push(bookmark._id);
+      this.userData.readLater.push(snippet._id);
       readLaterList = this.userData.readLater;
     }
 
     let pinnedList = [];
     if (pinned) {
-      this.userData.pinned.unshift(bookmark._id);
+      this.userData.pinned.unshift(snippet._id);
       pinnedList = this.userData.pinned;
     }
 
@@ -153,16 +153,16 @@ export class UserDataStore {
     return obs;
   }
 
-  updateUserDataHistory$(bookmark: Bookmark): Observable<UserData> {
+  updateUserDataHistory$(snippet: Snippet): Observable<UserData> {
     // history
-    this.placeOnTopOfUserHistoryIds(bookmark._id);
+    this.placeOnTopOfUserHistoryIds(snippet._id);
 
     const obs: Observable<any> = this.userService.updateUserDataHistory(this.userId, this.userData.history);
     obs.subscribe(
       () => {
-        this.userDataHistoryStore.updateHistoryStore(bookmark);
-        if (this.userId === bookmark.userId) {
-          this.personalBookmarksService.increaseOwnerVisitCount(bookmark).subscribe();
+        this.userDataHistoryStore.updateHistoryStore(snippet);
+        if (this.userId === snippet.userId) {
+          this.personalSnippetsService.increaseOwnerVisitCount(snippet).subscribe();
         }
         this._userData.next(this.userData);
       }
@@ -171,16 +171,16 @@ export class UserDataStore {
     return obs;
   }
 
-  public updateUserDataHistoryBulk$(bookmarks: Bookmark[]): Observable<UserData> {
-    for (let i = bookmarks.length - 1; i >= 0; i--) {
-      this.placeOnTopOfUserHistoryIds(bookmarks[i]._id);
+  public updateUserDataHistoryBulk$(snippets: Snippet[]): Observable<UserData> {
+    for (let i = snippets.length - 1; i >= 0; i--) {
+      this.placeOnTopOfUserHistoryIds(snippets[i]._id);
     }
 
 
     const obs: Observable<any> = this.userService.updateUserDataHistory(this.userId, this.userData.history);
     obs.subscribe(
       () => {
-        this.userDataHistoryStore.updateHistoryStoreBulk(bookmarks);
+        this.userDataHistoryStore.updateHistoryStoreBulk(snippets);
 
         this._userData.next(this.userData);
       }
@@ -189,16 +189,16 @@ export class UserDataStore {
     return obs;
   }
 
-  private placeOnTopOfUserHistoryIds(bookmarkId: string) {
-    const index = this.userData.history.indexOf(bookmarkId);
+  private placeOnTopOfUserHistoryIds(snippetId: string) {
+    const index = this.userData.history.indexOf(snippetId);
     if (index !== -1) {
       this.userData.history.splice(index, 1);
     }
-    this.userData.history.unshift(bookmarkId);
+    this.userData.history.unshift(snippetId);
   }
 
-  addToUserDataPinned$(bookmark: Bookmark): Observable<UserData> {
-    this.userData.pinned.unshift(bookmark._id);
+  addToUserDataPinned$(snippet: Snippet): Observable<UserData> {
+    this.userData.pinned.unshift(snippet._id);
     const obs: Observable<any> = this.userService.updateUserDataPinned(this.userId, this.userData.pinned);
     obs.subscribe(
       () => {
@@ -233,8 +233,8 @@ export class UserDataStore {
     return obs;
   }
 
-  removeFromUserDataPinned$(bookmark: Bookmark): Observable<UserData> {
-    this.userData.pinned = this.userData.pinned.filter(x => x !== bookmark._id);
+  removeFromUserDataPinned$(snippet: Snippet): Observable<UserData> {
+    this.userData.pinned = this.userData.pinned.filter(x => x !== snippet._id);
     const obs: Observable<any> = this.userService.updateUserDataPinned(this.userId, this.userData.pinned);
     obs.subscribe(
       () => {
@@ -245,8 +245,8 @@ export class UserDataStore {
     return obs;
   }
 
-  addToUserReadLater$(bookmark: Bookmark): Observable<UserData> {
-    this.userData.readLater.push(bookmark._id);
+  addToUserReadLater$(snippet: Snippet): Observable<UserData> {
+    this.userData.readLater.push(snippet._id);
     const obs: Observable<any> = this.userService.updateUserDataReadLater(this.userId, this.userData.readLater);
     obs.subscribe(
       () => {
@@ -257,8 +257,8 @@ export class UserDataStore {
     return obs;
   }
 
-  removeFromUserDataReadLater$(bookmark: Bookmark): Observable<UserData> {
-    this.userData.readLater = this.userData.readLater.filter(x => x !== bookmark._id);
+  removeFromUserDataReadLater$(snippet: Snippet): Observable<UserData> {
+    this.userData.readLater = this.userData.readLater.filter(x => x !== snippet._id);
     const obs: Observable<any> = this.userService.updateUserDataReadLater(this.userId, this.userData.readLater);
     obs.subscribe(
       () => {
@@ -269,88 +269,88 @@ export class UserDataStore {
     return obs;
   }
 
-  getLikedBookmarks$(): Observable<Bookmark[]> {
-    if (!this.starredBookmarksHaveBeenLoaded) {
-      this.userService.getLikedBookmarks(this.userId).subscribe(data => {
-        this.starredBookmarksHaveBeenLoaded = true;
+  getLikedSnippets$(): Observable<Snippet[]> {
+    if (!this.starredSnippetsHaveBeenLoaded) {
+      this.userService.getLikedSnippets(this.userId).subscribe(data => {
+        this.starredSnippetsHaveBeenLoaded = true;
         this._stars.next(data);
       });
     }
     return this._stars.asObservable();
   }
 
-  addToLikedBookmarks(bookmark: Bookmark) {
-    this.userData.likes.unshift(bookmark._id);
+  addToLikedSnippets(snippet: Snippet) {
+    this.userData.likes.unshift(snippet._id);
     this.updateUserData$(this.userData).subscribe(() => {
-      if (this.starredBookmarksHaveBeenLoaded) {
-        const starredBookmarks: Bookmark[] = this._stars.getValue();
-        starredBookmarks.unshift(bookmark);
-        this._stars.next(starredBookmarks);
+      if (this.starredSnippetsHaveBeenLoaded) {
+        const starredSnippets: Snippet[] = this._stars.getValue();
+        starredSnippets.unshift(snippet);
+        this._stars.next(starredSnippets);
       }
     });
   }
 
-  removeFromLikedBookmarks(bookmark: Bookmark) {
-    this.userData.likes = this.userData.likes.filter(x => x !== bookmark._id);
+  removeFromLikedSnippets(snippet: Snippet) {
+    this.userData.likes = this.userData.likes.filter(x => x !== snippet._id);
     this.updateUserData$(this.userData).subscribe(() => {
-      this.publishStarredBookmarksAfterDeletion(bookmark);
+      this.publishStarredSnippetsAfterDeletion(snippet);
     });
 
   }
 
-  private publishStarredBookmarksAfterDeletion(bookmark: Bookmark) {
-    if (this.starredBookmarksHaveBeenLoaded) {
-      if (this.starredBookmarksHaveBeenLoaded) {
-        const starredBookmarks: Bookmark[] = this._stars.getValue();
-        const index = starredBookmarks.findIndex((starredBookmark) => bookmark._id === starredBookmark._id);
+  private publishStarredSnippetsAfterDeletion(snippet: Snippet) {
+    if (this.starredSnippetsHaveBeenLoaded) {
+      if (this.starredSnippetsHaveBeenLoaded) {
+        const starredSnippets: Snippet[] = this._stars.getValue();
+        const index = starredSnippets.findIndex((starredSnippet) => snippet._id === starredSnippet._id);
         if (index !== -1) {
-          starredBookmarks.splice(index, 1);
-          this._stars.next(starredBookmarks);
+          starredSnippets.splice(index, 1);
+          this._stars.next(starredSnippets);
         }
       }
     }
   }
 
-  removeFromStoresAtDeletion(bookmark: Bookmark) {
-    this.userData.history = this.userData.history.filter(x => x !== bookmark._id);
-    this.userData.pinned = this.userData.pinned.filter(x => x !== bookmark._id);
-    this.userData.favorites = this.userData.favorites.filter(x => x !== bookmark._id);
-    this.userData.readLater = this.userData.readLater.filter(x => x !== bookmark._id);
-    this.userData.likes = this.userData.likes.filter(x => x !== bookmark._id);
+  removeFromStoresAtDeletion(snippet: Snippet) {
+    this.userData.history = this.userData.history.filter(x => x !== snippet._id);
+    this.userData.pinned = this.userData.pinned.filter(x => x !== snippet._id);
+    this.userData.favorites = this.userData.favorites.filter(x => x !== snippet._id);
+    this.userData.readLater = this.userData.readLater.filter(x => x !== snippet._id);
+    this.userData.likes = this.userData.likes.filter(x => x !== snippet._id);
     this.updateUserData$(this.userData).subscribe(() => {
-      this.notifyStoresService.deleteBookmark(bookmark);
+      this.notifyStoresService.deleteSnippet(snippet);
     });
 
   }
 
-  likeBookmark(bookmark: Bookmark) {
-    bookmark.likeCount++;
-    const rateBookmarkRequest: RateBookmarkRequest = {
+  likeSnippet(snippet: Snippet) {
+    snippet.likeCount++;
+    const rateSnippetRequest: RateSnippetRequest = {
       ratingUserId: this.userId,
       action: RatingActionType.LIKE,
-      bookmark: bookmark
+      snippet: snippet
     }
-    this.rateBookmark(rateBookmarkRequest);
+    this.rateSnippet(rateSnippetRequest);
   }
 
-  unLikeBookmark(bookmark: Bookmark) {
-    bookmark.likeCount--;
+  unLikeSnippet(snippet: Snippet) {
+    snippet.likeCount--;
 
-    const rateBookmarkRequest: RateBookmarkRequest = {
+    const rateSnippetRequest: RateSnippetRequest = {
       ratingUserId: this.userId,
       action: RatingActionType.UNLIKE,
-      bookmark: bookmark
+      snippet: snippet
     }
 
-    this.rateBookmark(rateBookmarkRequest);
+    this.rateSnippet(rateSnippetRequest);
   }
 
-  private rateBookmark(rateBookmarkRequest: RateBookmarkRequest) {
-    this.userService.rateBookmark(rateBookmarkRequest).subscribe(() => {
-      if (rateBookmarkRequest.action === RatingActionType.LIKE) {
-        this.addToLikedBookmarks(rateBookmarkRequest.bookmark);
+  private rateSnippet(rateSnippetRequest: RateSnippetRequest) {
+    this.userService.rateSnippet(rateSnippetRequest).subscribe(() => {
+      if (rateSnippetRequest.action === RatingActionType.LIKE) {
+        this.addToLikedSnippets(rateSnippetRequest.snippet);
       } else {
-        this.removeFromLikedBookmarks(rateBookmarkRequest.bookmark);
+        this.removeFromLikedSnippets(rateSnippetRequest.snippet);
       }
     });
   }

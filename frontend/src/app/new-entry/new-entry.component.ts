@@ -27,18 +27,6 @@ export class NewEntryComponent implements OnInit {
     this.popupExt = this.route.snapshot.queryParamMap.get('popupExt');
   }
 
-  redirectToNewBookmark() {
-    this.router.navigate(['/my-bookmarks/new'],
-      {
-        queryParams: {
-          url: this.url,
-          desc: this.selection,
-          title: this.title,
-          popup: this.popup
-        }
-      });
-  }
-
   redirectToNewSnippet() {
     this.router.navigate(['/my-snippets/new'],
       {

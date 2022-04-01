@@ -1,11 +1,8 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
-import { BookmarksTaggedService } from './tag/bookmarks-tagged.service';
-import { BookmarksTaggedComponent } from './tag/bookmarks-tagged.component';
+import { PublicSnippetsStore } from './snippets/store/public-snippets-store.service';
 import { PublicRoutingModule } from './public-routing.module';
-import { HomepageComponent } from './bookmarks/homepage.component';
-import { PublicBookmarksStore } from './bookmarks/store/public-bookmarks-store.service';
-import { PublicBookmarksService } from './bookmarks/public-bookmarks.service';
+import { HomepageComponent } from './snippets/homepage.component';
 import { PrivacyPolicyComponent } from './privacy/privacy-policy.component';
 import { TermsOfServiceComponent } from './terms/terms-of-service.component';
 import { UserPublicProfileComponent } from './user-public-profile/user-public-profile.component';
@@ -24,7 +21,6 @@ import { FeedbackService } from './feedback/feedback.service';
 import { ExtensionsPageComponent } from './extensions/extensions-page.component';
 import { AboutComponent } from './about/about.component';
 import { RegisterComponent } from './register/register.component';
-import { PublicBookmarkDetailsComponent } from './bookmarks/public-bookmark-details.component';
 
 @NgModule({
   declarations : [
@@ -35,11 +31,9 @@ import { PublicBookmarkDetailsComponent } from './bookmarks/public-bookmark-deta
     TermsOfServiceComponent,
     HomepageComponent,
     UserPublicProfileComponent,
-    BookmarksTaggedComponent,
     VersionComponent,
     PublicSnippetDetailsComponent,
     PublicSnippetsComponent,
-    PublicBookmarkDetailsComponent,
     SnippetTaggedComponent,
   ],
   imports: [
@@ -51,13 +45,11 @@ import { PublicBookmarkDetailsComponent } from './bookmarks/public-bookmark-deta
     MySnippetsModule
   ],
   providers: [
-    PublicBookmarksService,
     PublicSnippetsService,
-    PublicBookmarksStore,
     UserPublicService,
-    BookmarksTaggedService,
     SnippetTagService,
-    FeedbackService
+    FeedbackService,
+    PublicSnippetsStore
   ]
 })
 export class PublicResourcesModule {}

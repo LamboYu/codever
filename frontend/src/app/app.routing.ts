@@ -12,12 +12,8 @@ const routes: Routes = [
     component: NewEntryComponent
   },
   {
-    path: 'my-bookmarks',
-    loadChildren: () => import('app/my-bookmarks/my-bookmarks.module').then(m => m.MyBookmarksModule)
-  },
-  {
     path: 'personal',
-    redirectTo: 'my-bookmarks', // needed for already installed extension or bookmarklets
+    redirectTo: 'my-snippets', // needed for already installed extension or snippetlets
   },
   {
     path: 'dashboard',
@@ -37,7 +33,7 @@ const routes: Routes = [
   },
   {
     path: 'my-codelets',
-    redirectTo: 'my-snippets', // needed for already installed extension or bookmarklets
+    redirectTo: 'my-snippets', // needed for already installed extension or snippetlets
   },
   {
     path: 'search',

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Bookmark } from '../../core/model/bookmark';
 import { ActivatedRoute } from '@angular/router';
 import { UserData } from '../../core/model/user-data';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,7 +17,7 @@ export class AsyncSearchResultListComponent extends TagFollowingBaseComponent im
   verifyForWatchedTag: Observable<string>; // used to avoid looking in watchedTags for other tags in the html template
 
   @Input()
-  searchResults$: Observable<(Bookmark | Snippet)[]>;
+  searchResults$: Observable<Snippet[]>;
 
   @Input()
   queryText: string; // used for highlighting search terms in the bookmarks list
@@ -59,15 +58,7 @@ export class AsyncSearchResultListComponent extends TagFollowingBaseComponent im
   }
 
 
-  isBookmark(searchResult: Bookmark | Snippet) {
-    return 'location' in searchResult;
-  }
-
-  isSnippet(searchResult: Bookmark | Snippet) {
-    return 'codeSnippets' in searchResult;
-  }
-
-  of(searchResult: Snippet | Bookmark) {
+  of(searchResult: Snippet) {
     return of(searchResult);
   }
 }

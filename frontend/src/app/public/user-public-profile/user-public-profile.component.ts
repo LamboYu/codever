@@ -3,9 +3,9 @@ import { Observable, of } from 'rxjs';
 import { UserPublicService } from './user-public.service';
 import { environment } from '../../../environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Bookmark } from '../../core/model/bookmark';
+import { Snippet } from '../../core/model/snippet';
 import { UserData } from '../../core/model/user-data';
-import { PublicBookmarksService } from '../bookmarks/public-bookmarks.service';
+import { PublicSnippetsService } from '../snippets/public-snippets.service';
 import { KeycloakService } from 'keycloak-angular';
 import { UserInfoStore } from '../../core/user/user-info.store';
 import { UserDataStore } from '../../core/user/userdata.store';
@@ -25,14 +25,14 @@ import { LoginDialogHelperService } from '../../core/login-dialog-helper.service
 export class UserPublicProfileComponent extends TagFollowingBaseComponent implements OnInit {
 
   userPublicData$: Observable<UserPublicData>;
-  recentPosts$: Observable<Bookmark[]>;
+  recentPosts$: Observable<Snippet[]>;
   userData$: Observable<UserData>;
   userId: string;
   userIsLoggedIn = false;
 
   constructor(private userPublicService: UserPublicService,
               private keycloakService: KeycloakService,
-              private publicBookmarksService: PublicBookmarksService,
+              private publicSnippetsService: PublicSnippetsService,
               private userInfoStore: UserInfoStore,
               private userDataStore: UserDataStore,
               public userDataWatchedTagsStore: UserDataWatchedTagsStore,
@@ -62,7 +62,7 @@ export class UserPublicProfileComponent extends TagFollowingBaseComponent implem
       this.meta.updateTag({name: 'og:description', content: publicData.publicProfile.summary})
     })
     const searchText = `user:${this.userId}`;
-    this.recentPosts$ = this.publicBookmarksService.searchPublicBookmarks(searchText, environment.RECENT_PUBLIC_USER_BOOKMARKS_LIMIT, 1, 'newest', null);
+    this.recentPosts$ = this.publicSnippetsService.searchPublicSnippets(searchText, environment.RECENT_PUBLIC_USER_SNIPPETS_LIMIT, 1, 'newest', null);
   }
 
   goToEditUserProfile() {

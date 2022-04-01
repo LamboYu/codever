@@ -8,7 +8,7 @@ export class SystemService {
 
   // List of cached queries that'll removed from localStorage after each new "cache" version release
   cachedQueries = {
-    PUBLIC_TAGS_LIST: `${environment.API_URL}/public/bookmarks`
+    PUBLIC_TAGS_LIST: `${environment.API_URL}/public/snippets`
   }
 
   // List of cached keys that will be removed from localStorate after each new "cache" version release

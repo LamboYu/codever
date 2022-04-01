@@ -30,7 +30,7 @@ export class MySearchesComponent implements OnInit {
 
   buttonEnabled: boolean;
 
-  searchDomain = SearchDomain.MY_BOOKMARKS.valueOf();
+  searchDomain = SearchDomain.MY_SNIPPETS.valueOf();
   searchDomains = searchDomains;
 
   saved = 'saved';

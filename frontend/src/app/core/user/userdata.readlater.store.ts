@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { UserData } from '../model/user-data';
 import { UserDataService } from '../user-data.service';
-import { Bookmark } from '../model/bookmark';
+import { Snippet } from '../model/snippet';
 import { UserInfoStore } from './user-info.store';
 import { NotifyStoresService } from './notify-stores.service';
 import { UserDataStore } from './userdata.store';
@@ -14,7 +14,7 @@ import { environment } from '../../../environments/environment';
 })
 export class UserDataReadLaterStore {
 
-  private _readLater: BehaviorSubject<Bookmark[]> = new BehaviorSubject(null);
+  private _readLater: BehaviorSubject<Snippet[]> = new BehaviorSubject(null);
   private readLaterHaveBeenLoaded = false;
 
   loadedPage: number;
@@ -25,12 +25,12 @@ export class UserDataReadLaterStore {
               private notifyStoresService: NotifyStoresService
   ) {
     this.loadedPage = 1;
-    this.notifyStoresService.bookmarkDeleted$.subscribe((bookmark) => {
-      this.publishReadLaterAfterDeletion(bookmark);
+    this.notifyStoresService.snippetDeleted$.subscribe((snippet) => {
+      this.publishReadLaterAfterDeletion(snippet);
     });
   }
 
-  getReadLater$(userId: string, page: number): Observable<Bookmark[]> {
+  getReadLater$(userId: string, page: number): Observable<Snippet[]> {
     if (this.loadedPage !== page || !this.readLaterHaveBeenLoaded) {
       this.userService.getReadLater(userId, page, environment.PAGINATION_PAGE_SIZE).subscribe(data => {
         if (!this.readLaterHaveBeenLoaded) {
@@ -43,22 +43,22 @@ export class UserDataReadLaterStore {
     return this._readLater.asObservable();
   }
 
-  addToReadLater(bookmark: Bookmark) {
-    this.userDataStore.addToUserReadLater$(bookmark).subscribe(() => {
-      this.publishReadLaterAfterCreation(bookmark);
+  addToReadLater(snippet: Snippet) {
+    this.userDataStore.addToUserReadLater$(snippet).subscribe(() => {
+      this.publishReadLaterAfterCreation(snippet);
     });
   }
 
-  removeFromReadLater(bookmark: Bookmark) {
-    this.userDataStore.removeFromUserDataReadLater$(bookmark).subscribe(() => {
-      this.publishReadLaterAfterDeletion(bookmark);
+  removeFromReadLater(snippet: Snippet) {
+    this.userDataStore.removeFromUserDataReadLater$(snippet).subscribe(() => {
+      this.publishReadLaterAfterDeletion(snippet);
     });
   }
 
-  private publishReadLaterAfterDeletion(bookmark: Bookmark) {
+  private publishReadLaterAfterDeletion(snippet: Snippet) {
     if (this.readLaterHaveBeenLoaded) {
-      const readLater: Bookmark[] = this._readLater.getValue();
-      const index = readLater.findIndex((item) => bookmark._id === item._id);
+      const readLater: Snippet[] = this._readLater.getValue();
+      const index = readLater.findIndex((item) => snippet._id === item._id);
       if (index !== -1) {
         readLater.splice(index, 1);
         this._readLater.next(readLater);
@@ -66,10 +66,10 @@ export class UserDataReadLaterStore {
     }
   }
 
-  public publishReadLaterAfterCreation(bookmark: Bookmark) {
+  public publishReadLaterAfterCreation(snippet: Snippet) {
     if (this.readLaterHaveBeenLoaded) {
-      const readLater: Bookmark[] = this._readLater.getValue();
-      readLater.push(bookmark);
+      const readLater: Snippet[] = this._readLater.getValue();
+      readLater.push(snippet);
       this._readLater.next(readLater); // insert at the top (index 0)
     }
   }

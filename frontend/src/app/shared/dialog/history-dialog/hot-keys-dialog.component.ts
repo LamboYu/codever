@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { Bookmark } from '../../../core/model/bookmark';
+import { Snippet } from '../../../core/model/snippet';
 import { AddToHistoryService } from '../../../core/user/add-to-history.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { AddToHistoryService } from '../../../core/user/add-to-history.service';
 })
 export class HotKeysDialogComponent implements OnInit {
 
-  bookmarks$: Observable<Bookmark[]>;
+  snippets$: Observable<Snippet[]>;
   title: string;
   filterText: '';
 
@@ -20,7 +20,7 @@ export class HotKeysDialogComponent implements OnInit {
     public addToHistoryService: AddToHistoryService,
     @Inject(MAT_DIALOG_DATA) data
   ) {
-    this.bookmarks$ = data.bookmarks$;
+    this.snippets$ = data.snippets$;
     this.title = data.title;
   }
 

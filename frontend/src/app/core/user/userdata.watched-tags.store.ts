@@ -23,7 +23,7 @@ export class UserDataWatchedTagsStore {
     this.userDataStore.getUserData$().subscribe(userData => {
       this.userData = userData;
     });
-    this.notifyStoresService.bookmarkDeleted$.subscribe((bookmark) => {
+    this.notifyStoresService.snippetDeleted$.subscribe((snippet) => {
       // TODO remove from watched tags...
     });
   }

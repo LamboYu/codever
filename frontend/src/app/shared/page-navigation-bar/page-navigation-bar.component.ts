@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Bookmark } from '../../core/model/bookmark';
 import { Snippet } from '../../core/model/snippet';
 import { PaginationAction } from '../../core/model/pagination-action';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,7 +22,7 @@ export class PageNavigationBarComponent implements OnInit, AfterViewInit, OnChan
   callerPagination: string;
 
   @Input()
-  results: (Bookmark | Snippet)[];
+  results: Snippet[];
 
   showPaginationDelayExpired = false;
 

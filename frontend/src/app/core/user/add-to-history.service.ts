@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Bookmark } from '../model/bookmark';
+import { Snippet } from '../model/snippet';
 import { UserDataStore } from './userdata.store';
 
 @Injectable({
@@ -9,16 +9,16 @@ export class AddToHistoryService {
   constructor(private userDataStore: UserDataStore) {
   }
 
-  onClickInDescription(userIsLoggedIn: boolean, $event: any, bookmark: Bookmark) {
+  onClickInDescription(userIsLoggedIn: boolean, $event: any, snippet: Snippet) {
     if (userIsLoggedIn && this.isHtmlAnchorElement($event)) {
       $event.target.setAttribute('target', '_blank');
-      this.userDataStore.updateUserDataHistory$(bookmark);
+      this.userDataStore.updateUserDataHistory$(snippet);
     }
   }
 
-  onMiddleClickInDescription(userIsLoggedIn: boolean, $event: any, bookmark: Bookmark) {
+  onMiddleClickInDescription(userIsLoggedIn: boolean, $event: any, snippet: Snippet) {
     if (userIsLoggedIn && this.isHtmlAnchorElement($event)) {
-      this.userDataStore.updateUserDataHistory$(bookmark);
+      this.userDataStore.updateUserDataHistory$(snippet);
     }
   }
 
@@ -26,9 +26,9 @@ export class AddToHistoryService {
     return $event.target.matches('a');
   }
 
-  promoteInHistoryIfLoggedIn(userIsLoggedIn: boolean, bookmark: Bookmark) {
+  promoteInHistoryIfLoggedIn(userIsLoggedIn: boolean, snippet: Snippet) {
     if (userIsLoggedIn) {
-      this.userDataStore.updateUserDataHistory$(bookmark);
+      this.userDataStore.updateUserDataHistory$(snippet);
     }
   }
 }

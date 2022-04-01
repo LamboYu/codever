@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
 import { UserData } from '../model/user-data';
 import { UserDataService } from '../user-data.service';
-import { Bookmark } from '../model/bookmark';
+import { Snippet } from '../model/snippet';
 import { UserInfoStore } from './user-info.store';
 import { NotifyStoresService } from './notify-stores.service';
 import { UserDataStore } from './userdata.store';
@@ -19,8 +19,8 @@ import { environment } from '../../../environments/environment';
  */
 export class UserDataFavoritesStore {
 
-  private _favorites: BehaviorSubject<Bookmark[]> = new BehaviorSubject(null);
-  private favoriteBookmarksHaveBeenLoaded = false;
+  private _favorites: BehaviorSubject<Snippet[]> = new BehaviorSubject(null);
+  private favoriteSnippetsHaveBeenLoaded = false;
 
   private userId: string;
   private userData: UserData;
@@ -44,16 +44,16 @@ export class UserDataFavoritesStore {
         });
       }
     });
-    this.notifyStoresService.bookmarkDeleted$.subscribe((bookmark) => {
-      this.publishedFavoritesAfterDeletion(bookmark);
+    this.notifyStoresService.snippetDeleted$.subscribe((snippet) => {
+      this.publishedFavoritesAfterDeletion(snippet);
     });
   }
 
-  getFavoriteBookmarks$(page: number): Observable<Bookmark[]> {
-    if (this.loadedPage !== page || !this.favoriteBookmarksHaveBeenLoaded) {
-      this.userService.getFavoriteBookmarks(this.userId, page, environment.PAGINATION_PAGE_SIZE).subscribe(data => {
-        if (!this.favoriteBookmarksHaveBeenLoaded) {
-          this.favoriteBookmarksHaveBeenLoaded = true;
+  getFavoriteSnippets$(page: number): Observable<Snippet[]> {
+    if (this.loadedPage !== page || !this.favoriteSnippetsHaveBeenLoaded) {
+      this.userService.getFavoriteSnippets(this.userId, page, environment.PAGINATION_PAGE_SIZE).subscribe(data => {
+        if (!this.favoriteSnippetsHaveBeenLoaded) {
+          this.favoriteSnippetsHaveBeenLoaded = true;
         }
         this.loadedPage = page;
         this._favorites.next(data);
@@ -62,32 +62,32 @@ export class UserDataFavoritesStore {
     return this._favorites.asObservable();
   }
 
-  addToFavoriteBookmarks(bookmark: Bookmark) {
-    this.userData.favorites.unshift(bookmark._id);
+  addToFavoriteSnippets(snippet: Snippet) {
+    this.userData.favorites.unshift(snippet._id);
     this.userDataStore.updateUserData$(this.userData).subscribe(() => {
-      if (this.favoriteBookmarksHaveBeenLoaded) {
-        const favoritesBookmarks: Bookmark[] = this._favorites.getValue();
-        favoritesBookmarks.unshift(bookmark);
+      if (this.favoriteSnippetsHaveBeenLoaded) {
+        const favoritesSnippets: Snippet[] = this._favorites.getValue();
+        favoritesSnippets.unshift(snippet);
 
-        this._favorites.next(favoritesBookmarks); // insert at the top (index 0)
+        this._favorites.next(favoritesSnippets); // insert at the top (index 0)
       }
     });
   }
 
-  removeFromFavoriteBookmarks(bookmark: Bookmark) {
-    this.userData.favorites = this.userData.favorites.filter(x => x !== bookmark._id);
+  removeFromFavoriteSnippets(snippet: Snippet) {
+    this.userData.favorites = this.userData.favorites.filter(x => x !== snippet._id);
     this.userDataStore.updateUserData$(this.userData).subscribe(() => {
-      this.publishedFavoritesAfterDeletion(bookmark);
+      this.publishedFavoritesAfterDeletion(snippet);
     });
   }
 
-  private publishedFavoritesAfterDeletion(bookmark: Bookmark) {
-    if (this.favoriteBookmarksHaveBeenLoaded) {
-      const favoritesBookmarks: Bookmark[] = this._favorites.getValue();
-      const index = favoritesBookmarks.findIndex((favoriteBookmark) => bookmark._id === favoriteBookmark._id);
+  private publishedFavoritesAfterDeletion(snippet: Snippet) {
+    if (this.favoriteSnippetsHaveBeenLoaded) {
+      const favoritesSnippets: Snippet[] = this._favorites.getValue();
+      const index = favoritesSnippets.findIndex((favoriteSnippet) => snippet._id === favoriteSnippet._id);
       if (index !== -1) {
-        favoritesBookmarks.splice(index, 1);
-        this._favorites.next(favoritesBookmarks);
+        favoritesSnippets.splice(index, 1);
+        this._favorites.next(favoritesSnippets);
       }
     }
   }

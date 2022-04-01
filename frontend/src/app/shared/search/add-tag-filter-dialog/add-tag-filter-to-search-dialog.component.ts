@@ -2,14 +2,12 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { Observable } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
-import { PersonalBookmarksService } from '../../../core/personal-bookmarks.service';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { PersonalSnippetsService } from '../../../core/personal-snippets.service';
 import { SearchDomain } from '../../../core/model/search-domain.enum';
-import { PublicBookmarksService } from '../../../public/bookmarks/public-bookmarks.service';
 import { UsedTag } from '../../../core/model/used-tag';
 import { PublicSnippetsService } from '../../../public/snippets/public-snippets.service';
 
@@ -37,9 +35,7 @@ export class AddTagFilterToSearchDialogComponent implements OnInit {
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  constructor(private personalBookmarksService: PersonalBookmarksService,
-              private personalSnippetsService: PersonalSnippetsService,
-              private publicBookmarksService: PublicBookmarksService,
+  constructor(private personalSnippetsService: PersonalSnippetsService,
               private publicSnippetsService: PublicSnippetsService,
               private dialogRef: MatDialogRef<AddTagFilterToSearchDialogComponent>,
               @Inject(MAT_DIALOG_DATA) data) {
@@ -50,18 +46,9 @@ export class AddTagFilterToSearchDialogComponent implements OnInit {
 
   ngOnInit() {
     switch (this.searchDomain) {
-      case SearchDomain.MY_BOOKMARKS : {
-        this.personalBookmarksService.getUserTagsForBookmarks(this.userId).subscribe(this.setTags());
-      }
-        break;
 
       case SearchDomain.MY_SNIPPETS : {
         this.personalSnippetsService.getUserTagsForSnippets(this.userId).subscribe(this.setTags());
-      }
-        break;
-
-      case SearchDomain.PUBLIC_BOOKMARKS : {
-        this.publicBookmarksService.getMostUsedPublicTags(300).subscribe(this.setTags());
       }
         break;
 

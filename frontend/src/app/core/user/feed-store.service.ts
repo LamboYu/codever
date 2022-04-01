@@ -2,7 +2,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 import { UserDataService } from '../user-data.service';
-import { Bookmark } from '../model/bookmark';
+import { Snippet } from '../model/snippet';
 import { UserInfoStore } from './user-info.store';
 import { NotifyStoresService } from './notify-stores.service';
 import { environment } from '../../../environments/environment';
@@ -14,8 +14,8 @@ export class FeedStore {
 
   readonly FIRST_PAGE = 1;
 
-  private _feedBookmarks: BehaviorSubject<Bookmark[]> = new BehaviorSubject(null);
-  private feedBookmarksHaveBeenLoaded = false;
+  private _feedSnippets: BehaviorSubject<Snippet[]> = new BehaviorSubject(null);
+  private feedSnippetsHaveBeenLoaded = false;
 
   loadedPage: number;
 
@@ -25,31 +25,31 @@ export class FeedStore {
   ) {
     this.loadedPage = this.FIRST_PAGE;
 
-    this.notifyStoresService.bookmarkDeleted$.subscribe((bookmark) => {
-      this.removeFromFeedBookmarks(bookmark);
+    this.notifyStoresService.snippetDeleted$.subscribe((snippet) => {
+      this.removeFromFeedSnippets(snippet);
     });
   }
 
-  getFeedBookmarks$(userId: string, page: number): Observable<Bookmark[]> {
-    if (this.loadedPage !== page || !this.feedBookmarksHaveBeenLoaded) {
-      if (!this.feedBookmarksHaveBeenLoaded) {
-        this.feedBookmarksHaveBeenLoaded = true;
+  getFeedSnippets$(userId: string, page: number): Observable<Snippet[]> {
+    if (this.loadedPage !== page || !this.feedSnippetsHaveBeenLoaded) {
+      if (!this.feedSnippetsHaveBeenLoaded) {
+        this.feedSnippetsHaveBeenLoaded = true;
       }
-      this.userService.getFeedBookmarks(userId, page, environment.PAGINATION_PAGE_SIZE).subscribe(data => {
+      this.userService.getFeedSnippets(userId, page, environment.PAGINATION_PAGE_SIZE).subscribe(data => {
         this.loadedPage = page;
-        this._feedBookmarks.next(data);
+        this._feedSnippets.next(data);
       });
     }
-    return this._feedBookmarks.asObservable();
+    return this._feedSnippets.asObservable();
   }
 
-  public removeFromFeedBookmarks(bookmark: Bookmark) {
-    if (this.feedBookmarksHaveBeenLoaded) {
-      const myFeedBookmarks: Bookmark[] = this._feedBookmarks.getValue();
-      const index = myFeedBookmarks.findIndex((myFeedBookmark) => bookmark._id === myFeedBookmark._id);
+  public removeFromFeedSnippets(snippet: Snippet) {
+    if (this.feedSnippetsHaveBeenLoaded) {
+      const myFeedSnippets: Snippet[] = this._feedSnippets.getValue();
+      const index = myFeedSnippets.findIndex((myFeedSnippet) => snippet._id === myFeedSnippet._id);
       if (index !== -1) {
-        myFeedBookmarks.splice(index, 1);
-        this._feedBookmarks.next(myFeedBookmarks);
+        myFeedSnippets.splice(index, 1);
+        this._feedSnippets.next(myFeedSnippets);
       }
     }
   }

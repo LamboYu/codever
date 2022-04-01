@@ -2,7 +2,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 import { UserDataService } from '../user-data.service';
-import { Bookmark } from '../model/bookmark';
+import { Snippet } from '../model/snippet';
 import { UserInfoStore } from './user-info.store';
 import { NotifyStoresService } from './notify-stores.service';
 import { environment } from '../../../environments/environment';
@@ -14,7 +14,7 @@ import { localStorageKeys } from '../model/localstorage.cache-keys';
 })
 export class UserDataHistoryStore {
 
-  private _history: BehaviorSubject<Bookmark[]> = new BehaviorSubject(null);
+  private _history: BehaviorSubject<Snippet[]> = new BehaviorSubject(null);
   private historyHasBeenLoaded = false;
 
   loadedPage: number;
@@ -25,13 +25,13 @@ export class UserDataHistoryStore {
               private  localStorageService: LocalStorageService
   ) {
     this.loadedPage = 1;
-    this.notifyStoresService.bookmarkDeleted$.subscribe((bookmark) => {
-      this.deleteFromHistoryStore(bookmark);
+    this.notifyStoresService.snippetDeleted$.subscribe((snippet) => {
+      this.deleteFromHistoryStore(snippet);
     });
   }
 
 
-  getHistory$(userId: string, page: number): Observable<Bookmark[]> {
+  getHistory$(userId: string, page: number): Observable<Snippet[]> {
     if (this.loadedPage !== page || !this.historyHasBeenLoaded) {
       if (!this.historyHasBeenLoaded) {
         this.historyHasBeenLoaded = true;
@@ -46,36 +46,36 @@ export class UserDataHistoryStore {
     return this._history.asObservable();
   }
 
-  getAllHistory$(userId: string): Observable<Bookmark[]> {
+  getAllHistory$(userId: string): Observable<Snippet[]> {
     return this.userService.getAllHistory$(userId);
   }
 
-  public updateHistoryStoreBulk(bookmarks: Bookmark[]) {
-    for (const bookmark of bookmarks) {
-      this.updateHistoryStore(bookmark);
+  public updateHistoryStoreBulk(snippets: Snippet[]) {
+    for (const snippet of snippets) {
+      this.updateHistoryStore(snippet);
     }
   }
 
-  public updateHistoryStore(bookmark: Bookmark) {
+  public updateHistoryStore(snippet: Snippet) {
     if (this.historyHasBeenLoaded) {
-      let lastVisitedBookmarks: Bookmark[] = this._history.getValue();
-      lastVisitedBookmarks = lastVisitedBookmarks.filter(item => item._id !== bookmark._id);
-      lastVisitedBookmarks.unshift(bookmark);
+      let lastVisitedSnippets: Snippet[] = this._history.getValue();
+      lastVisitedSnippets = lastVisitedSnippets.filter(item => item._id !== snippet._id);
+      lastVisitedSnippets.unshift(snippet);
 
-      this._history.next(lastVisitedBookmarks);
+      this._history.next(lastVisitedSnippets);
     }
-    this.updateEntryLocalStorage(bookmark);
+    this.updateEntryLocalStorage(snippet);
   }
 
-  private updateEntryLocalStorage(bookmark: Bookmark) {
-    let bookmarks = this.localStorageService.load(localStorageKeys.userHistoryBookmarks);
-    if (bookmarks) {
-      bookmarks = bookmarks.filter(item => item._id !== bookmark._id);
-      bookmarks.unshift(bookmark);
+  private updateEntryLocalStorage(snippet: Snippet) {
+    let snippets = this.localStorageService.load(localStorageKeys.userHistorySnippets);
+    if (snippets) {
+      snippets = snippets.filter(item => item._id !== snippet._id);
+      snippets.unshift(snippet);
 
       const options: LocalStorageSaveOptions = {
-        key: localStorageKeys.userHistoryBookmarks,
-        data: bookmarks.slice(0, 100), // in "backend" are max 50 stored
+        key: localStorageKeys.userHistorySnippets,
+        data: snippets.slice(0, 100), // in "backend" are max 50 stored
         expirationHours: 24
       };
       this.localStorageService.save(options);
@@ -83,28 +83,28 @@ export class UserDataHistoryStore {
 
   }
 
-  public deleteFromHistoryStore(bookmark: Bookmark) {
+  public deleteFromHistoryStore(snippet: Snippet) {
     if (this.historyHasBeenLoaded) {
-      const lastVisitedBookmarks: Bookmark[] = this._history.getValue();
-      const indexHistory = lastVisitedBookmarks.findIndex((lastVisitedBookmark) => bookmark._id === lastVisitedBookmark._id);
+      const lastVisitedSnippets: Snippet[] = this._history.getValue();
+      const indexHistory = lastVisitedSnippets.findIndex((lastVisitedSnippet) => snippet._id === lastVisitedSnippet._id);
       if (indexHistory !== -1) {
-        lastVisitedBookmarks.splice(indexHistory, 1);
-        this._history.next(lastVisitedBookmarks);
+        lastVisitedSnippets.splice(indexHistory, 1);
+        this._history.next(lastVisitedSnippets);
       }
     }
 
-    this.deleteEntryFromLocalStorage(bookmark);
+    this.deleteEntryFromLocalStorage(snippet);
   }
 
-  private deleteEntryFromLocalStorage(bookmark: Bookmark) {
-    const bookmarks = this.localStorageService.load(localStorageKeys.userHistoryBookmarks);
-    if (bookmarks) {
-      const indexHistory = bookmarks.findIndex((lastVisitedBookmark) => bookmark._id === lastVisitedBookmark._id);
+  private deleteEntryFromLocalStorage(snippet: Snippet) {
+    const snippets = this.localStorageService.load(localStorageKeys.userHistorySnippets);
+    if (snippets) {
+      const indexHistory = snippets.findIndex((lastVisitedSnippet) => snippet._id === lastVisitedSnippet._id);
       if (indexHistory !== -1) {
-        bookmarks.splice(indexHistory, 1);
+        snippets.splice(indexHistory, 1);
         const options: LocalStorageSaveOptions = {
-          key: localStorageKeys.userHistoryBookmarks,
-          data: bookmarks,
+          key: localStorageKeys.userHistorySnippets,
+          data: snippets,
           expirationHours: 24
         };
         this.localStorageService.save(options);

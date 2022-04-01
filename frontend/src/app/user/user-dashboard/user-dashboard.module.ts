@@ -4,7 +4,7 @@ import { UserTagsComponent } from './tags/user-tags.component';
 import { UserDashboardComponent } from './user-dashboard.component';
 import { CommonModule } from '@angular/common';
 import { AuthGuard } from '../../core/auth/auth-guard.service';
-import { UserBookmarksComponent } from './user-bookmarks/user-bookmarks.component';
+import { UserSnippetsComponent } from './user-snippets/user-snippets.component';
 import { SharedModule } from '../../shared/shared.module';
 import { DeleteBookmarksByTagDialogComponent } from './tags/delete-bookmarks-by-tag-dialog/delete-bookmarks-by-tag-dialog.component';
 import { DeleteSavedSearchDialogComponent } from './my-searches/delete-saved-search-dialog/delete-saved-search-dialog.component';
@@ -36,7 +36,7 @@ const userDashboardRoutes: Routes = [
   declarations: [
     UserTagsComponent,
     UserDashboardComponent,
-    UserBookmarksComponent,
+    UserSnippetsComponent,
     DeleteBookmarksByTagDialogComponent,
     DeleteSavedSearchDialogComponent,
     MySearchesComponent,

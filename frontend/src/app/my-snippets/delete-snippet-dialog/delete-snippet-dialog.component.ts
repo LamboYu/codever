@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-delete-bookmark-dialog',
+  selector: 'app-delete-snippet-dialog',
   templateUrl: './delete-snippet-dialog.component.html',
   styleUrls: ['./delete-snippet-dialog.component.scss']
 })
