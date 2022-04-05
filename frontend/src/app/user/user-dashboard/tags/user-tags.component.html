@@ -9,7 +9,7 @@
         <hr class="mt-0">
         <div *ngIf="userData.watchedTags.length === 0; else listWatchedTags">
           <div class="alert alert-info mt-3">
-            <strong>Watch tags <i class="fa fa-eye"></i></strong> to have bookmarks tagged with these in your
+            <strong>Watch tags <i class="fa fa-eye"></i></strong> to have snippets tagged with these in your
             feed.
           </div>
         </div>
@@ -18,7 +18,7 @@
             <a
               [routerLink]="['/tagged', tag]"
               class="btn btn-secondary btn-sm"
-              title="Show public bookmarks tagged {{tag}}"
+              title="Show public snippets tagged {{tag}}"
             >
               {{tag}}
             </a>
@@ -64,7 +64,7 @@
         <hr class="mt-0">
         <div *ngIf="userData.ignoredTags.length === 0; else listIgnoredTags">
           <div class="alert alert-info mt-3">
-            <strong>Ignore tags <i class="fas fa-ban"></i></strong> to filter out bookmarks tagged with these in your
+            <strong>Ignore tags <i class="fas fa-ban"></i></strong> to filter out snippets tagged with these in your
             feed.
           </div>
         </div>
@@ -73,7 +73,7 @@
             <a
               [routerLink]="['/tagged', tag]"
               class="btn btn-secondary btn-sm"
-              title="Show public bookmarks tagged {{tag}}">
+              title="Show public snippets tagged {{tag}}">
               {{tag}}
             </a>
             <button
@@ -113,7 +113,7 @@
     <div *ngIf="(usedTags$ | async)" class="mt-2">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <h5>Used with <em>my public</em> bookmarks</h5>
+          <h5>Used with <em>my public</em> snippets</h5>
         </mat-expansion-panel-header>
         <ng-template matExpansionPanelContent>
           <hr class="mt-0">
@@ -122,7 +122,7 @@
               [routerLink]="['/search']"
               [queryParams]="{q: '[' + tag.name + '] user:' + userId, sd: 'public-bookmarks'}"
               class="btn btn-secondary btn-sm"
-              title="Show my public bookmarks tagged {{tag.name}}"
+              title="Show my public snippets tagged {{tag.name}}"
             >
               {{tag.name}} <span class="badge badge-light">{{tag.count}}</span>
             </a>
@@ -170,7 +170,7 @@
 
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <h5>Used with <em>my private</em> bookmarks</h5>
+          <h5>Used with <em>my private</em> snippets</h5>
         </mat-expansion-panel-header>
         <ng-template matExpansionPanelContent>
           <hr class="mt-0">
@@ -179,7 +179,7 @@
               [routerLink]="['/search']"
               [queryParams]="{q: 'private:only [' + tag.name + ']', sd: 'my-bookmarks'}"
               class="btn btn-secondary btn-sm"
-              title="Show my private bookmarks tagged {{tag.name}}"
+              title="Show my private snippets tagged {{tag.name}}"
             >
               {{tag.name}} <span class="badge badge-light">{{tag.count}}</span>
             </a>
@@ -229,7 +229,7 @@
 
   <h5 class="text-danger" style="margin-top: 1rem">Danger zone</h5>
   <div class="border border-danger rounded-lg" style="padding: 1rem">
-    <h6>Batch delete <strong>private</strong> bookmarks by <strong>tag</strong></h6>
+    <h6>Batch delete <strong>private</strong> snippets by <strong>tag</strong></h6>
     <div class="input-group search-component">
       <div class="input-group-prepend">
     <span class="input-group-text">
@@ -253,7 +253,7 @@
                 type="button"
                 (click)="openDeleteDialog(tagSearchBox.value)"
                 [disabled]="!buttonEnabled"
-        >Delete <strong>ALL private</strong> bookmarks by selected tag
+        >Delete <strong>ALL private</strong> snippets by selected tag
         </button>
       </div>
     </div>

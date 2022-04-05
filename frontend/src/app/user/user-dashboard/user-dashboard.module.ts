@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { AuthGuard } from '../../core/auth/auth-guard.service';
 import { UserSnippetsComponent } from './user-snippets/user-snippets.component';
 import { SharedModule } from '../../shared/shared.module';
-import { DeleteBookmarksByTagDialogComponent } from './tags/delete-bookmarks-by-tag-dialog/delete-bookmarks-by-tag-dialog.component';
+import { DeleteSnippetsByTagDialogComponent } from './tags/delete-snippets-by-tag-dialog/delete-snippets-by-tag-dialog.component';
 import { DeleteSavedSearchDialogComponent } from './my-searches/delete-saved-search-dialog/delete-saved-search-dialog.component';
 import { MySearchesComponent } from './my-searches/my-searches.component';
 import { FollowingComponent } from './following/following.component';
@@ -37,7 +37,7 @@ const userDashboardRoutes: Routes = [
     UserTagsComponent,
     UserDashboardComponent,
     UserSnippetsComponent,
-    DeleteBookmarksByTagDialogComponent,
+    DeleteSnippetsByTagDialogComponent,
     DeleteSavedSearchDialogComponent,
     MySearchesComponent,
     FollowingComponent,
@@ -58,7 +58,7 @@ const userDashboardRoutes: Routes = [
     AuthGuard
   ],
   entryComponents: [
-    DeleteBookmarksByTagDialogComponent,
+    DeleteSnippetsByTagDialogComponent,
     DeleteSavedSearchDialogComponent
   ],
   exports: [RouterModule]

@@ -1,14 +1,6 @@
 <mat-tab-group [selectedIndex]="selectedTabIndex">
   <mat-tab>
     <ng-template mat-tab-label>
-      <span class="app-tab-label"><i class="fas fa-bookmark"></i> My bookmarks</span>
-    </ng-template>
-    <ng-template matTabContent>
-      <app-user-bookmarks [userId]="userId" [userData$]="userData$"></app-user-bookmarks>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
       <span class="app-tab-label"><i class="fas fa-code"></i> My snippets</span>
     </ng-template>
     <ng-template matTabContent>

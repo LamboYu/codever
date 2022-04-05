@@ -3,16 +3,16 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UsedTag } from '../../../../core/model/used-tag';
 
 @Component({
-  selector: 'app-delete-bookmarks-by-tag-dialog',
-  templateUrl: './delete-bookmarks-by-tag-dialog.component.html',
-  styleUrls: ['./delete-bookmarks-by-tag-dialog.component.scss']
+  selector: 'app-delete-snippets-by-tag-dialog',
+  templateUrl: './delete-snippets-by-tag-dialog.component.html',
+  styleUrls: ['./delete-snippets-by-tag-dialog.component.scss']
 })
-export class DeleteBookmarksByTagDialogComponent implements OnInit {
+export class DeleteSnippetsByTagDialogComponent implements OnInit {
 
   tag: string;
 
   constructor(
-    private dialogRef: MatDialogRef<DeleteBookmarksByTagDialogComponent>,
+    private dialogRef: MatDialogRef<DeleteSnippetsByTagDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data
   ) {
     console.log('data.tag ', data);

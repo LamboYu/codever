@@ -102,4 +102,14 @@ export class PersonalSnippetsService {
     return this.httpClient.get<Snippet[]>(`${this.personalSnippetsApiBaseUrl}/${userId}/snippets/export`)
       .pipe(shareReplay(1));
   }
+
+  deletePrivateSnippetsForTag(userId: string, tag: string): Observable<any> {
+    const params = new HttpParams()
+      .set('tag', tag)
+      .set('type', 'private');
+    return this.httpClient
+      .delete(`${this.personalSnippetsApiBaseUrl}/${userId}/snippets`, {headers: this.headers, params: params})
+      .pipe(shareReplay(1));
+  }
+
 }

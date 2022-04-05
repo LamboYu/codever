@@ -207,7 +207,7 @@ export class UserDataService {
 
   updateAcknowledgeWelcome(userId: string): Observable<UserData> {
     return this.httpClient
-      .patch(`${this.usersApiBaseUrl}/${userId}/welcome-acknowledge`, {headers: this.headers})
+      .patch(`${this.usersApiBaseUrl}/${userId}/welcome-acknowledge`, {}, {headers: this.headers})
       .pipe(shareReplay(1));
   }
 
