@@ -77,6 +77,10 @@
           </div>
         </ng-template>
       </ng-template>
+      <app-async-snippet-list
+        [snippets$]="feedSnippets$"
+        [callerPagination]="callerPaginationFeed"
+      ></app-async-snippet-list>
     </mat-tab>
 
     <mat-tab>
