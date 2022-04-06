@@ -28,6 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ExtensionsComponent } from './extensions/extensions.component';
 import { AsyncSearchResultListComponent } from './async-search-result-list/async-search-result-list.component';
 import { PageNavigationBarComponent } from './page-navigation-bar/page-navigation-bar.component';
+import { BackupSnippetsDialogComponent } from './dialog/backup-snippets-dialog/backup-snippets-dialog.component';
 
 
 /**
@@ -67,6 +68,7 @@ import { PageNavigationBarComponent } from './page-navigation-bar/page-navigatio
     CopySnippetButtonComponent,
     SnippetCardBodyComponent,
     AddTagFilterToSearchDialogComponent,
+    BackupSnippetsDialogComponent,
     ExtensionsComponent
   ],
   exports: [
@@ -88,7 +90,8 @@ import { PageNavigationBarComponent } from './page-navigation-bar/page-navigatio
   entryComponents: [
     LoginRequiredDialogComponent,
     HotKeysDialogComponent,
-    AddTagFilterToSearchDialogComponent
+    AddTagFilterToSearchDialogComponent,
+    BackupSnippetsDialogComponent
   ]
 })
 export class SharedModule { }

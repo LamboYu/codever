@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Snippet } from '../../../core/model/snippet';
 import { PersonalSnippetsService } from '../../../core/personal-snippets.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { BackupSnippetsDialogComponent } from '../../../shared/dialog/backup-snippets-dialog/backup-snippets-dialog.component';
 
 @Component({
   selector: 'app-my-snippets',
@@ -16,13 +17,32 @@ export class MySnippetsComponent implements OnChanges {
   userId: string;
 
   constructor(private personalSnippetsService: PersonalSnippetsService,
-              private backupBookmarksDialog: MatDialog) {
+              private backupSnippetsDialog: MatDialog) {
   }
 
   ngOnChanges() {
     if (this.userId) { // TODO - maybe consider doing different to pass the userId to child component
       this.mySnippets$ = this.personalSnippetsService.getLatestSnippets(this.userId);
     }
+  }  
+
+  exportMySnippets() {
+    this.personalSnippetsService.getAllMySnippets(this.userId).subscribe(data =>
+      this.downloadFile(data)
+    );
+  }
+
+  private downloadFile(data: Snippet[]) {
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      blobUrl: window.URL.createObjectURL(blob),
+      backupType: 'snippets'
+    };
+
+    this.backupSnippetsDialog.open(BackupSnippetsDialogComponent, dialogConfig);
   }
 
 }
