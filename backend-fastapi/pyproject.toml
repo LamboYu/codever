@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "codever-fastapi"
+version = "0.1.0"
+description = ""
+authors = ["Xiaobing Yu <lamboyo@163.com>"]
+
+[[tool.poetry.source]]
+name = "nexus"
+url = "http://10.1.4.0/nexus/repository/pypi-proxy/simple/"
+default = true
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = {extras = ["all"], version = "~=0.75.0"}
+databases = "*"
+uvicorn = {extras = ["standard"], version = "~=0.15.0"}
+motor = "~=2.5.1"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
